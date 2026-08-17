@@ -1,0 +1,20 @@
+# Dependencies
+node_modules/
+
+# Builds and caches
+.next/
+.turbo/
+coverage/
+dist/
+*.tsbuildinfo
+
+# Environment and local tooling
+.env
+.env.*
+!.env.example
+.DS_Store
+*.log
+
+# Test artifacts
+playwright-report/
+test-results/

@@ -9,14 +9,16 @@ O MVP precisa de uma base web/API com contratos e regras reutilizáveis pelo fut
 
 ## Decisão
 
-Nesta etapa, o repositório será uma workspace pnpm com uma aplicação web em `apps/web` e pacotes independentes, cada um com fronteira e contrato próprios:
+Nesta etapa, o repositório será uma workspace pnpm com uma aplicação web em `apps/web` e os pacotes independentes que já possuem um consumidor real:
 
-- `packages/domain`: regras de negócio, sem dependência de Next.js, React ou Expo;
+- `packages/domain`: regras de negócio, sem dependência de Next.js, React ou Expo; a aderência funciona como tracer bullet dessa fronteira;
 - `packages/contracts`: contratos REST/OpenAPI e schemas compartilhados;
-- `packages/api-client`: cliente da API para os consumidores;
-- `packages/database-types`: tipos gerados ou mantidos na fronteira de dados;
-- `packages/design-tokens`: tokens sem acoplar a uma aplicação;
-- `packages/test-factories`: fábricas de teste compartilhadas.
+- `packages/api-client`: cliente validado da API para os consumidores;
+- `packages/design-tokens`: tokens visuais consumidos pela aplicação web.
+
+`packages/database-types` será criado quando o primeiro schema gerar tipos reais.
+`packages/test-factories` será criado quando dois ou mais pacotes compartilharem uma
+fábrica; antecipá-los agora produziria somente placeholders sem contrato.
 
 A aplicação web usa Next.js 16.2 e expõe a fronteira `/api/v1`. Dependências entre pacotes devem ser explícitas; a implementação de dados deve ficar atrás de repositórios e casos de uso. Supabase, `supabase/migrations`, seed, testes pgTAP e a configuração de infraestrutura ficam fora deste recorte e serão definidos na próxima etapa, após reconstituir e validar o ambiente da VPS.
 

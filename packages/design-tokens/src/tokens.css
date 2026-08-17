@@ -1,0 +1,14 @@
+:root {
+  --ink: #10243a;
+  --ink-soft: #52647a;
+  --paper: #f5f8fb;
+  --surface: #ffffff;
+  --line: #d7e1eb;
+  --blue: #1859d1;
+  --blue-deep: #103f98;
+  --aqua: #20b8a5;
+  --coral: #e96950;
+  --display: "Avenir Next Condensed", "Arial Narrow", sans-serif;
+  --body: "Avenir Next", "Segoe UI", sans-serif;
+  --utility: "SFMono-Regular", Consolas, monospace;
+}

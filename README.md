@@ -9,6 +9,10 @@ web responsivo, a API REST inicial e pacotes TypeScript compartilháveis com o
 futuro aplicativo Expo. Funcionalidades de autenticação, prescrição e execução
 serão entregues nas próximas etapas do PRD.
 
+A fundação já inclui o contrato OpenAPI da rota de saúde, um cliente HTTP
+validado, tokens visuais compartilhados e uma regra de aderência usada como
+tracer bullet do domínio independente.
+
 ## Desenvolvimento
 
 Requisitos: Node.js 24 e pnpm 11.

@@ -4,14 +4,15 @@ import { describe, expect, it } from "vitest";
 import HomePage from "./page";
 
 describe("AC Fitness foundation page", () => {
-  it("explains the current product state without implying unavailable features", () => {
+  it("exposes the real foundation checks without a fictitious workout", () => {
     const markup = renderToStaticMarkup(<HomePage />);
 
-    expect(markup).toContain("Treinos que continuam fazendo sentido");
-    expect(markup).toContain("Fundação em curso");
-    expect(markup).toContain("Sem login ainda");
-    expect(markup).toContain("Sem dados reais");
-    expect(markup).toContain("O que já está decidido");
-    expect(markup).toContain('href="/api/v1/health"');
+    expect(markup).toContain("Fundação operacional");
+    expect(markup).toContain("Aderência de referência");
+    expect(markup).toContain("67%");
+    expect(markup).toContain("Verificar conexão");
+    expect(markup).toContain("Próxima etapa");
+    expect(markup).not.toContain("Agachamento livre");
+    expect(markup).not.toContain("O que já está decidido");
   });
 });

@@ -1,12 +1,14 @@
 import { describe, expect, it } from "vitest";
 
-import { ApiClientHttpError, createApiClient } from "../src/index";
+import { createClient, getHealth } from "../src/index";
 
-describe("createApiClient", () => {
-  it("consulta o endpoint de health e retorna a resposta validada", async () => {
-    const calls: Array<{ input: RequestInfo | URL; init?: RequestInit }> = [];
-    const fetchFake: typeof fetch = async (input, init) => {
-      calls.push({ input, init });
+describe("generated health client", () => {
+  it("uses the generated Fetch client and SDK without network access", async () => {
+    const requests: Request[] = [];
+    const fetchFake: typeof fetch = async (input) => {
+      const request = input instanceof Request ? input : new Request(input);
+      requests.push(request);
+
       return new Response(
         JSON.stringify({
           status: "ok",
@@ -20,59 +22,42 @@ describe("createApiClient", () => {
       );
     };
 
-    const client = createApiClient({
+    const generatedClient = createClient({
       baseUrl: "https://api.example.test",
       fetch: fetchFake
     });
+    const result = await getHealth({ client: generatedClient });
 
-    await expect(client.getHealth()).resolves.toEqual({
-      status: "ok",
-      service: "acfitness-api",
-      version: "0.1.0"
-    });
-    expect(calls).toHaveLength(1);
-    expect(calls[0]).toEqual({
-      input: "https://api.example.test/api/v1/health",
-      init: {
-        headers: { Accept: "application/json" },
-        method: "GET"
+    expect(result).toMatchObject({
+      data: {
+        status: "ok",
+        service: "acfitness-api",
+        version: "0.1.0"
       }
     });
+    expect(result.error).toBeUndefined();
+    expect(requests).toHaveLength(1);
+    expect(requests[0]?.url).toBe("https://api.example.test/api/v1/health");
+    expect(requests[0]?.method).toBe("GET");
   });
 
-  it("falha com erro HTTP quando a API responde com status não-ok", async () => {
+  it("returns the generated error result for a non-2xx response", async () => {
     const fetchFake: typeof fetch = async () =>
       new Response("upstream unavailable", {
         status: 503,
         statusText: "Service Unavailable"
       });
-    const client = createApiClient({
+    const generatedClient = createClient({
       baseUrl: "https://api.example.test",
       fetch: fetchFake
     });
 
-    const request = client.getHealth();
+    const result = await getHealth({ client: generatedClient });
 
-    await expect(request).rejects.toBeInstanceOf(ApiClientHttpError);
-    await expect(request).rejects.toMatchObject({ status: 503 });
-    await expect(request).rejects.toThrow("HTTP 503 Service Unavailable");
-  });
-
-  it("falha quando a resposta HTTP não corresponde ao contrato compartilhado", async () => {
-    const fetchFake: typeof fetch = async () =>
-      new Response(
-        JSON.stringify({
-          status: "degraded",
-          service: "acfitness-api",
-          version: "0.1.0"
-        }),
-        { status: 200 }
-      );
-    const client = createApiClient({
-      baseUrl: "https://api.example.test",
-      fetch: fetchFake
+    expect(result).toMatchObject({
+      error: "upstream unavailable",
+      response: { status: 503 }
     });
-
-    await expect(client.getHealth()).rejects.toThrow();
+    expect(result.data).toBeUndefined();
   });
 });

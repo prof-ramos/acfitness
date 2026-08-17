@@ -13,7 +13,7 @@ Nesta etapa, o repositório será uma workspace pnpm com uma aplicação web em 
 
 - `packages/domain`: regras de negócio, sem dependência de Next.js, React ou Expo; a aderência funciona como tracer bullet dessa fronteira;
 - `packages/contracts`: contratos REST/OpenAPI e schemas compartilhados;
-- `packages/api-client`: cliente validado da API para os consumidores;
+- `packages/api-client`: cliente Fetch e SDK gerados a partir do contrato OpenAPI e consumidos pela aplicação web;
 - `packages/design-tokens`: tokens visuais consumidos pela aplicação web.
 
 `packages/database-types` será criado quando o primeiro schema gerar tipos reais.
@@ -21,6 +21,10 @@ Nesta etapa, o repositório será uma workspace pnpm com uma aplicação web em 
 fábrica; antecipá-los agora produziria somente placeholders sem contrato.
 
 A aplicação web usa Next.js 16.2 e expõe a fronteira `/api/v1`. Dependências entre pacotes devem ser explícitas; a implementação de dados deve ficar atrás de repositórios e casos de uso. Supabase, `supabase/migrations`, seed, testes pgTAP e a configuração de infraestrutura ficam fora deste recorte e serão definidos na próxima etapa, após reconstituir e validar o ambiente da VPS.
+
+O documento OpenAPI versionado é gerado deterministicamente a partir dos
+schemas de contrato. O cliente é regenerado com `pnpm generate`, e a CI executa
+`pnpm check:generated` para rejeitar deriva entre contrato e artefatos gerados.
 
 ## Motivos
 

@@ -10,7 +10,10 @@
   "scripts": {
     "build": "turbo run build",
     "check": "pnpm lint && pnpm typecheck && pnpm test && pnpm build",
+    "check:generated": "pnpm generate && test -z \"$(git status --porcelain --untracked-files=all -- packages/contracts/openapi.json packages/api-client/src/generated)\"",
     "dev": "turbo run dev --filter=@acfitness/web",
+    "generate": "pnpm --filter @acfitness/contracts generate:openapi && pnpm --filter @acfitness/api-client generate",
+    "generate:openapi": "pnpm --filter @acfitness/contracts generate:openapi",
     "lint": "turbo run lint",
     "test": "turbo run test",
     "test:watch": "turbo run test:watch --parallel",
@@ -18,7 +21,9 @@
   },
   "devDependencies": {
     "@eslint/js": "9.39.5",
+    "@hey-api/openapi-ts": "0.99.0",
     "eslint": "9.39.5",
+    "tsx": "4.23.12",
     "turbo": "2.10.10",
     "typescript": "6.0.3",
     "typescript-eslint": "8.67.0"
